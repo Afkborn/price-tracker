@@ -3,7 +3,7 @@ from os import startfile, system
 from Python.Tracker import PriceTracker
 from pyfiglet import Figlet
 from pyfiglet import FigletFont
-from colorama import Fore,Back, Style
+from colorama import Fore, Style
 from msvcrt import getch
 MENUOPT = ["Check the prices of the product list","Add product to product list","Exit"]
 
@@ -24,19 +24,19 @@ if __name__ == "__main__":
     while menuControl:
         system('cls')
         printPriceTracker()
-        for index,i in enumerate(MENUOPT):
-            if index == selectedMenuOpt:
-                print(f"[{selectedMenuSymbol}] {i}")
-            else:
-                print(f"[ ] {i}")
-        returnKey = getch()
+        if not pressSpecialKey:
+            for index,i in enumerate(MENUOPT):
+                if index == selectedMenuOpt:
+                    print(f"[{selectedMenuSymbol}] {i}")
+                else:
+                    print(f"[ ] {i}")
 
+        
+        returnKey = getch()
         if returnKey == b'\x03': # Control + C
             menuControl = False
-
         elif returnKey == b'\xe0': # Special Key
             pressSpecialKey = True
-
         elif returnKey == b'H': # Up Arrow or H
             if pressSpecialKey: # Up Arrow
                 if selectedMenuOpt == 0:
@@ -44,7 +44,6 @@ if __name__ == "__main__":
                 else:
                     selectedMenuOpt -= 1
                 pressSpecialKey = False
-
         elif returnKey == b'P': # Down Arrow or P
             if pressSpecialKey: # Down Arrow
                 if selectedMenuOpt == len(MENUOPT) -1:
@@ -56,8 +55,8 @@ if __name__ == "__main__":
             if selectedMenuOpt == 2:
                 exit()
             elif selectedMenuOpt == 1:
+                print("deneme",end="\r")
                 input("ok")
-            
         else:
             print(returnKey)
 
