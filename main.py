@@ -1,11 +1,12 @@
 
 from os import startfile, system,getcwd
-
+from Python.Product import Product
 from Python.Tracker import PriceTracker
 from pyfiglet import Figlet
 from pyfiglet import FigletFont
 from colorama import Fore, Style
 from msvcrt import getch
+from time import time
 
 MENUOPT = ["Check the prices of the product list","Add product to product list","Exit"]
 
@@ -68,13 +69,20 @@ if __name__ == "__main__":
                 
                 productName = input("Product name: ")
 
+                fiyatTakip = input("Ürünün fiyat bilgisini takip etmek istermisiniz? (e/h)")
+                if "e" in fiyatTakip or "E" in fiyatTakip:
+                    checkPrice = True
+                else:
+                    checkPrice = False
+                    
                 stokTakip = input("Ürünün stok bilgisini takip etmek istermisini? (e/h)")
                 if "e" in stokTakip or "E" in stokTakip:
-                    stokTakipEdilsin = True
+                    checkStock = True
                 else:
-                    stokTakipEdilsin = False
-
-                
+                    checkStock = False
+                productTime = time()
+                product = Product(productName=productName,productURL=productURL,productTime=productTime,checkStock=checkStock,checkPrice=checkPrice)
+                priceTracker.addProduct(product=product)
                 detailText.append("ürün ekleme işlemi yapıldı")
         else:
             print(returnKey)
