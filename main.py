@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from msvcrt import getch
 from time import time
 
-MENUOPT = ["Check the prices of the product list","Add product to product list","Exit"]
+MENUOPT = ["Check the prices of the product list","Add product to product list","Exit", "LIST ALL PRODUCTS ID and Name","delete product"]
 
 def printPriceTracker():
     f = Figlet(font="chunky")
@@ -39,6 +39,7 @@ if __name__ == "__main__":
                     print(f"[{selectedMenuSymbol}] {i}")
                 else:
                     print(f"[ ] {i}")
+                    
             for i in detailText:
                 print(i)
 
@@ -65,8 +66,27 @@ if __name__ == "__main__":
         elif returnKey == b'\r':
             if selectedMenuOpt == 2:
                 exit()
-            elif selectedMenuOpt == 1:
+            elif selectedMenuOpt == 3:
+                product = priceTracker.getProductsList()
+                for i in product:
+                    detailText.append((i.getId(), i.getProductName()))
 
+            elif selectedMenuOpt == 4:
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    print(myProduct)
+                    yn = input('Are you sure you want to delete? (y/n)').strip()
+                    if "y" in yn or "Y" in yn:
+                        
+                        detailText.append(f"deletion successful with id {myProduct.getId()}")
+                        priceTracker.deleteProduct(myProduct)
+                    else:
+                        detailText.append("Deletion canceled")
+
+            elif selectedMenuOpt == 1:
                 productURL = input("Product URL: ").strip()
                 #TODO ürünün URL bilgisinden hangi e-ticaret sitesinde olduğunu kontrol et
                 productURL = "htpps://www.fortesting.com/4541564654/41564654/564654654" # for testing

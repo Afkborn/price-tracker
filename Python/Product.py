@@ -1,5 +1,5 @@
 class Product:
-    def __init__(self,id:int = None,productName:str = None, productURL:str = None, productTime:int = None,checkStock:bool = None,checkPrice:bool = None,checkTime:int = None) -> None:
+    def __init__(self,id:int = None,productName:str = None, productURL:str = None, productTime:int = None,checkStock:bool = None,checkPrice:bool = None,checkTime:int = None,price:float = None, stock:bool = None) -> None:
         self.id = id
         self.productName = productName
         self.productURL = productURL
@@ -7,6 +7,8 @@ class Product:
         self.checkStock = checkStock
         self.checkPrice = checkPrice
         self.checkTime = checkTime
+        self.price = price
+        self.stock = stock
 
     def getId(self) -> int:
         return self.id
@@ -42,4 +44,14 @@ class Product:
         return self.checkTime
     def setCheckTime(self,checkTime):
         self.checkTime = checkTime
+
+    def getPrice(self) -> float:
+        return self.price
+    def setPrice(self,price):
+        self.price = price
+    
+    def getStock(self) -> bool:
+        return self.stock
+    def setStock(self,stock:bool):
+        self.stock = stock
         
