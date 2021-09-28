@@ -2,6 +2,7 @@
 from os import startfile, system,getcwd
 from Python.Product import Product
 from Python.Tracker import PriceTracker
+
 from pyfiglet import Figlet
 from pyfiglet import FigletFont
 from colorama import Fore, Style
@@ -18,9 +19,12 @@ def printPriceTracker():
 
 
 
+
+
 if __name__ == "__main__":
     detailText = []
     priceTracker = PriceTracker()
+    detailText.append(f"{priceTracker.getDbLen()} adet kayıt başarıyla yüklendi.")
     menuControl = True
     selectedMenuOpt = 0
     selectedMenuSymbol = 'x'
@@ -63,27 +67,39 @@ if __name__ == "__main__":
                 exit()
             elif selectedMenuOpt == 1:
 
-                productURL = input("Product URL: ")
+                productURL = input("Product URL: ").strip()
                 #TODO ürünün URL bilgisinden hangi e-ticaret sitesinde olduğunu kontrol et
-                productURL = "https://www.amazon.com.tr/SAMSUNG-SAPSI-Dahili-Sürücüsü-MZ-V8V1T0BW/dp/B08TJ2649W/ref=asc_df_B08TJ2649W/?tag=trshpngglede-21&linkCode=df0&hvadid=510610866222&hvpos=&hvnetw=g&hvrand=7595024957723860355&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9056794&hvtargid=pla-1187972384534&psc=1" # for testing
+                productURL = "htpps://www.fortesting.com/4541564654/41564654/564654654" # for testing
                 
-                productName = input("Product name: ")
+                productName = input("Product name: ").strip()
+                productName = "for testing "
 
-                fiyatTakip = input("Ürünün fiyat bilgisini takip etmek istermisiniz? (e/h)")
-                if "e" in fiyatTakip or "E" in fiyatTakip:
+                priceTrack = input("Would you like to follow the price information of the product? (y/n)").strip()
+                if "y" in priceTrack or "Y" in priceTrack:
                     checkPrice = True
                 else:
                     checkPrice = False
                     
-                stokTakip = input("Ürünün stok bilgisini takip etmek istermisini? (e/h)")
-                if "e" in stokTakip or "E" in stokTakip:
+                stockTrack = input("Would you like to follow the stock information of the product? (y/n)").strip()
+                if "n" in stockTrack or "N" in stockTrack:
                     checkStock = True
                 else:
                     checkStock = False
                 productTime = time()
-                product = Product(productName=productName,productURL=productURL,productTime=productTime,checkStock=checkStock,checkPrice=checkPrice)
-                priceTracker.addProduct(product=product)
-                detailText.append("ürün ekleme işlemi yapıldı")
+
+                try:
+                    checkTime = input("How often would you like to be checked? (HH:MM:SS)(Ex: 00:10:00 every 10minute.) : ")
+                    hour,minute,second = checkTime.split(":")
+                    totalSec = (int(hour)*3600) + (int(minute)*60) + int(second)
+                except:
+                    totalSec = 600
+                    print("Error! Default value 10 minute. You can change it in the product settings.")
+
+                product = Product(productName=productName,productURL=productURL,productTime=productTime,checkStock=checkStock,checkPrice=checkPrice,checkTime=totalSec)
+                productID = priceTracker.addProduct(product=product)
+                product.setId(productID)
+                detailText.append(f"The product named '{product.getProductName()}' has been added with the id number {product.getId()}.")
+
         else:
             print(returnKey)
 

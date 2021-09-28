@@ -1,11 +1,12 @@
 class Product:
-    def __init__(self,id:int = None,productName:str = None, productURL:str = None, productTime:int = None,checkStock:bool = None,checkPrice:bool = None) -> None:
+    def __init__(self,id:int = None,productName:str = None, productURL:str = None, productTime:int = None,checkStock:bool = None,checkPrice:bool = None,checkTime:int = None) -> None:
         self.id = id
         self.productName = productName
         self.productURL = productURL
         self.productTime = productTime
         self.checkStock = checkStock
         self.checkPrice = checkPrice
+        self.checkTime = checkTime
 
     def getId(self) -> int:
         return self.id
@@ -36,4 +37,9 @@ class Product:
         return self.checkPrice
     def setCheckPrice(self,checkPrice:bool):
         self.checkPrice = checkPrice
+    
+    def getCheckTime(self) ->int:
+        return self.checkTime
+    def setCheckTime(self,checkTime):
+        self.checkTime = checkTime
         
