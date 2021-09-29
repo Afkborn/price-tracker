@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from msvcrt import getch
 from time import time
 
-MENUOPT = ["Check the prices of the product list","Add product to product list","Exit", "LIST ALL PRODUCTS ID and Name","delete product"]
+MENUOPT = ["Check the prices of the product list","Add product to product list","Exit", "List product with id","Delete product with id","Add price manually with id","Get last price with id","Add stock manually with id","Get last stock state with id"]
 
 def printPriceTracker():
     f = Figlet(font="chunky")
@@ -39,11 +39,13 @@ if __name__ == "__main__":
                     print(f"[{selectedMenuSymbol}] {i}")
                 else:
                     print(f"[ ] {i}")
-                    
+
+
+                 
             for i in detailText:
                 print(i)
 
-        
+
         returnKey = getch()
         if returnKey == b'\x03': # Control + C
             menuControl = False
@@ -64,12 +66,55 @@ if __name__ == "__main__":
                     selectedMenuOpt +=1
                 pressSpecialKey = False
         elif returnKey == b'\r':
+
             if selectedMenuOpt == 2:
                 exit()
+            elif selectedMenuOpt == 6:
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    detailText.append(f"ID: {myProduct.getId()} Price: {priceTracker.getLastPriceWithProductFromDb(myProduct)}")
+
+            elif selectedMenuOpt == 7:
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    yn = input('Is the product in stock now? (y/n)').strip()
+                    if "y" in yn or "Y" in yn:
+                        priceTracker.addStockToDb(myProduct,True)
+                    else:
+                        priceTracker.addStockToDb(myProduct,False)
+            elif selectedMenuOpt == 8:
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    detailText.append(f"ID: {myProduct.getId()} Stock: {priceTracker.getLastStockStateWithProductFromDb(myProduct)}")
+
+            elif selectedMenuOpt == 5:
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    print(myProduct)
+                    price = int(input("Price: "))
+                    priceTracker.addPriceToDb(myProduct,price)
+                    detailText.append(myProduct)
+                
+
             elif selectedMenuOpt == 3:
-                product = priceTracker.getProductsList()
-                for i in product:
-                    detailText.append((i.getId(), i.getProductName()))
+                id = int(input("id"))
+                myProduct  = priceTracker.getProductFromDbWithId(id)
+                if myProduct == None:
+                    detailText.append(f"No product found with id {id}")
+                else:
+                    detailText.append(myProduct)
 
             elif selectedMenuOpt == 4:
                 id = int(input("id"))
@@ -101,7 +146,7 @@ if __name__ == "__main__":
                     checkPrice = False
                     
                 stockTrack = input("Would you like to follow the stock information of the product? (y/n)").strip()
-                if "n" in stockTrack or "N" in stockTrack:
+                if "y" in stockTrack or "Y" in stockTrack:
                     checkStock = True
                 else:
                     checkStock = False
@@ -119,9 +164,6 @@ if __name__ == "__main__":
                 productID = priceTracker.addProduct(product=product)
                 product.setId(productID)
                 detailText.append(f"The product named '{product.getProductName()}' has been added with the id number {product.getId()}.")
-
-        else:
-            print(returnKey)
 
 
 
