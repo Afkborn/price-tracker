@@ -20,24 +20,34 @@ class PriceTracker:
         self.checkDB()
 
     def getDbName(self) -> str:
+        """Database adını döner"""
         return self.__dbName
     def getIsLoadDb(self) -> bool:
+        """Database'in yüklenip yüklenmediğini döner"""
         return self.__isLoadDB
     def getDbLen(self):
+        """Databasede kayıtlı olan productların uzunluğunu döner"""
         self.checkDB()
         return self.__dbLen
     def getProductsList(self) -> list:
+        """Product listesini döner"""
         self.checkDB()
         return self.__products
+    def getDbLoc(self) -> str:
+        return self.__dbLoc
 
 
     def checkDB(self):
+        """Database dosyasını kontrol eder, eğer konumda database dosyası varsa yüklemeye yarayan loadDb fonksiyonu çalışır yoksa o konumda bir database dosyası oluşturmaya yarayan createDb çalışır"""
         if exists(self.__dbLoc):
+            #Konumda varsa
             self.__loadDB()
         else:
+            #Konumda yoksa
             self.__createDB
 
     def __loadDB(self):
+        """Database dosyasını yüklemeye yarar. Yüklenen değerler Product Classından bir obje olarak products listesine eklenir. """
         self.__products = []
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
@@ -77,6 +87,7 @@ class PriceTracker:
         self.getProductLenFromDB()
 
     def __createDB(self):
+        """kayıtlı konumda (öğrenmek için getDbLoc fonksiyonu kullanılabilir) database oluşturur. """
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(CREATETABLEPRODUCT)
@@ -88,7 +99,7 @@ class PriceTracker:
 
 
     def addProduct(self,product:Product) ->int:
-        """Return last insert row id as int."""
+        """Database'e ürün ekler ve son eklenen ürünün id bilgisini döner."""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(f"INSERT INTO products(productName,productURL,productTime,checkStock,checkPrice,checkTime) VALUES('{product.getProductName()}','{product.getProductURL()}',{product.getProductTime()},'{product.getCheckStock()}','{product.getCheckPrice()}',{product.getCheckTime()})")
@@ -98,6 +109,7 @@ class PriceTracker:
         return lastInsertID
     
     def addPriceToDb(self,product:Product, price : float):
+        """Database üzerinde bulunan Prices tablosuna verilen Product objesi için fiyat bilgisi ekler. """
         product.setPrice(price)
         product.setPriceTime(time())
         self.db = sql.connect(self.__dbLoc)
@@ -107,6 +119,7 @@ class PriceTracker:
         self.db.close()
     
     def addStockToDb(self,product:Product, stock : bool):
+        """Database üzerinde bulunan Stocks tablosuna verilen Product objesi için stok bilgisi ekler. """
         product.setStock(stock)
         product.setStockTime(time())
         self.db = sql.connect(self.__dbLoc)
@@ -116,15 +129,17 @@ class PriceTracker:
         self.db.close()
 
     def deleteProduct(self,product:Product) -> bool:
+        """Ürün Siler"""
         productId = product.getId()
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(f"DELETE FROM products WHERE id = '{productId}'")
+        #TODO ürüne ait olan stock ve price bilgilerinide sil.
         self.db.commit()
         self.db.close()
     
     def getProductFromDbWithId(self,id) -> Product:
-        """ if find return Product or none"""
+        """ID si verilen product objesini database'de arar varsa onu döner yoksa none döner."""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(f"SELECT * FROM products WHERE id = '{id}'")
@@ -152,6 +167,7 @@ class PriceTracker:
         return findProduct
     
     def getLastPriceWithProductFromDb(self, product:Product)-> float:
+        """verilen Product objesine ait son fiyat bilgisini databaseden sorgu yaparak float cinsinde döner."""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(F"SELECT MAX(priceTime),price FROM prices WHERE id = '{product.getId()}'")
@@ -164,6 +180,7 @@ class PriceTracker:
     
 
     def getLastStockStateWithProductFromDb(self,product:Product) -> bool:
+        """verilen product objesine ait son stok bilgisini databaseden sorgu yaparak bool cinsinden döner."""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(F"SELECT MAX(stockTime),stock FROM stocks WHERE id = '{product.getId()}'")
@@ -180,6 +197,7 @@ class PriceTracker:
 
 
     def getProductFromDbWithProductTime(self,productTime):
+        """Product sınıfından oluşturulan objenin oluştuğu süreye göre arama yapıp bulunan ürünü döner, yoksa None döner."""
         """ if find return Product or none"""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
@@ -192,15 +210,9 @@ class PriceTracker:
         self.db.close()
         return findProduct 
         
-    def getProductLenFromDB(self) -> int:
-        self.db = sql.connect(self.__dbLoc)
-        self.im = self.db.cursor()
-        self.im.execute("select last_insert_rowid() from products")
-        self.__dbLen = len(self.im.fetchall())
-        self.db.close() 
-        return self.__dbLen
 
     def getIdListFromDb(self) -> list:
+        """Database'e gidip products tablosundaki ürünlerin ID bilgisini döner."""
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute("select id from products")
