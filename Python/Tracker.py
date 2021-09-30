@@ -209,7 +209,15 @@ class PriceTracker:
         findProduct = Product(id,productName,productURL,productTime,checkStock,checkPrice,checkTime)
         self.db.close()
         return findProduct 
-        
+
+    def getProductLenFromDB(self) -> int:
+        """Database'de kayıtlı olan products listesinin uzunluğunu döner."""
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        self.im.execute("select last_insert_rowid() from products")
+        self.__dbLen = len(self.im.fetchall())
+        self.db.close() 
+        return self.__dbLen 
 
     def getIdListFromDb(self) -> list:
         """Database'e gidip products tablosundaki ürünlerin ID bilgisini döner."""
