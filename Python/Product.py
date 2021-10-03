@@ -12,17 +12,17 @@ class Product:
         priceTime:int = None,
         stockTime:int = None) -> None:
 
-        self.__id = id
-        self.__productName = productName
-        self.__productURL = productURL
-        self.__productTime = productTime
-        self.__checkStock = checkStock
-        self.__checkPrice = checkPrice
-        self.__checkTime = checkTime
-        self.__price = price
-        self.__stock = stock
-        self.__priceTime = priceTime
-        self.__stockTime = stockTime
+        self.__id = id # id
+        self.__productName = productName # ürün ismi
+        self.__productURL = productURL # ürün urlsi
+        self.__productTime = productTime   # oluşturulma zamanı
+        self.__checkStock = checkStock  # stok durumunun takip edilip edilmemesi
+        self.__checkPrice = checkPrice # fiyat durumunun takip edilip edilmemesi
+        self.__checkTime = checkTime # kontrol süresi 
+        self.__price = price #fiyat bilgisi
+        self.__stock = stock #stock bilgisi
+        self.__priceTime = priceTime #fiyata ait olan zaman bilgisi
+        self.__stockTime = stockTime #stoğa ait olan zaman bilgisi
 
     def __str__(self) -> str:
         return str((self.__id,self.__productName,self.__productURL,self.__productTime,self.__checkStock,self.__checkPrice,self.__checkTime,self.__price,self.__priceTime,self.__stock,self.__stockTime))

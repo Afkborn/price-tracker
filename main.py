@@ -2,7 +2,7 @@
 from os import startfile, system,getcwd
 from Python.Product import Product
 from Python.Tracker import PriceTracker
-
+from tabulate import tabulate
 from pyfiglet import Figlet
 from pyfiglet import FigletFont
 from colorama import Fore, Style
@@ -16,8 +16,6 @@ def printPriceTracker():
     print(Fore.CYAN)
     print(f.renderText(f'      Price\nTracker'))
     print(Style.RESET_ALL)
-
-
 
 
 
@@ -153,13 +151,13 @@ if __name__ == "__main__":
                 if productLen > 0:
                     system("cls")
                     productList = priceTracker.getProductsList()
+                    tablefmt = "orgtbl"
+                    headers = ["id","Name","Price","Stock","Last Check Time","URL"]
+                    data = []
                     for i in productList:
-                        print(i)
+                        data.append([i.getId(),i.getProductName(),i.getPrice(),i.getStock(),i.getProductURL()])
+                    table = tabulate(data,headers = headers,tablefmt=tablefmt)
+                    print(table)
                     input("....")
                 else:
                     detailText.append("No products registered, add product")
-
-
-
-
-

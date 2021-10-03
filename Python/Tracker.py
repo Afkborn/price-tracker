@@ -73,10 +73,18 @@ class PriceTracker:
                     checkPrice = False
                 findProduct = Product(id,productName,productURL,productTime,checkStock,checkPrice,checkTime)
                 if checkPrice:
-                    self.getLastPriceWithProductFromDb(findProduct)
+                    if self.getLastPriceWithProductFromDb(findProduct) == None or  time() > findProduct.getPriceTime() + findProduct.getCheckTime(): 
+                        # hiç kontrol edilmemişse veya kontrol edilme zamanına  kontrol edilmesi gereken süre kadar geçtiyse kontrol et
+                        pass # urlye gidip fiyatı kontrol et
+
                 if checkStock:
-                    self.getLastStockStateWithProductFromDb(findProduct)
+                    if self.getLastStockStateWithProductFromDb(findProduct) == None or time() > findProduct.getStockTime() + findProduct.getCheckTime():
+                        # hiç kontrol edilmemişse veya kontrol edilme zamanına  kontrol edilmesi gereken süre kadar geçtiyse kontrol et
+                        pass # urlye gidip stok durumunu kontrol et
+
                 self.__products.append(findProduct)
+
+
             self.__isLoadDB = True
         else:
             self.im.execute(CREATETABLEPRODUCT)
